@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio do Desafio | SM-Competition - Alvorada Pet</title>
+    <link rel="icon" type="image/png" href="favicon.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f0f0; /* Branco predominante */
+            color: #333333; /* Escrita preta */
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        /* Menu de Navegação */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95); /* Branco */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid rgba(173, 216, 230, 0.3); /* Lilás claro */
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #333333; /* Escrita preta */
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-size: 0.9rem;
+            text-align: center;
+            background: rgba(240, 240, 240, 0.8); /* Branco mais suave */
+            border: 2px solid rgba(173, 216, 230, 0.3); /* Lilás claro */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            white-space: nowrap;
+            display: inline-block;
+            min-width: fit-content;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #e0b0ff, #dda0dd); /* Tons de lilás */
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav-link:hover::before {
+            left: 0;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(224, 176, 255, 0.4); /* Sombra lilás */
+            border-color: rgba(224, 176, 255, 0.8); /* Borda lilás */
+            color: #ffffff; /* Texto branco no hover */
+        }
+
+        .nav-link.active {
+            background: linear-gradient(45deg, #e0b0ff, #dda0dd); /* Tons de lilás */
+            border-color: rgba(224, 176, 255, 0.8); /* Borda lilás */
+            box-shadow: 0 6px 20px rgba(224, 176, 255, 0.5); /* Sombra lilás */
+            color: #ffffff; /* Texto branco */
+        }
+
+        /* Header Principal */
+        .header {
+            text-align: center;
+            padding: 140px 2rem 60px;
+            background: linear-gradient(135deg, rgba(224, 176, 255, 0.1) 0%, rgba(221, 160, 221, 0.1) 100%); /* Fundo lilás suave */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23000000" opacity="0.02"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>'); /* Grão mais sutil */
+            opacity: 0.3;
+        }
+
+        .main-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 2rem;
+            color: #333333; /* Escrita preta */
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: #666666; /* Cinza escuro */
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Container Principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Seção do Sorteio */
+        .sorteio-section {
+            padding: 4rem 0;
+        }
+
+        .sorteio-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .sorteio-card {
+            background: rgba(255, 255, 255, 0.8); /* Fundo branco suave */
+            border-radius: 25px;
+            padding: 2rem;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(224, 176, 255, 0.3); /* Borda lilás suave */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .sorteio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(224, 176, 255, 0.15), rgba(221, 160, 221, 0.15)); /* Lilás suave */
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .sorteio-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(224, 176, 255, 0.3); /* Sombra lilás */
+            border-color: rgba(224, 176, 255, 0.6); /* Borda lilás */
+        }
+
+        .sorteio-card:hover::before {
+            opacity: 1;
+        }
+
+        .video-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 20px;
+            background: #000;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .sorteio-title {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 700;
+            color: #6a0dad; /* Lilás escuro */
+            position: relative;
+            z-index: 2;
+        }
+
+        .download-controls {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #9370db, #ba55d3); /* Lilás médio */
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            touch-action: manipulation;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '⬇️';
+            font-size: 1rem;
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(45deg, #8a2be2, #9932cc); /* Lilás mais escuro */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(147, 112, 219, 0.4);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(147, 112, 219, 0.4);
+        }
+
+        /* Rodapé */
+        .footer {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 2rem 0;
+            background: rgba(255, 255, 255, 0.5); /* Branco suave */
+            border-top: 2px solid rgba(173, 216, 230, 0.3); /* Lilás claro */
+            color: #333333; /* Escrita preta */
+        }
+
+        .autozapp-text {
+            background: rgba(240, 240, 240, 0.8); /* Branco mais suave */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(224, 176, 255, 0.3); /* Lilás suave */
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem;
+        }
+
+        .autozapp-text p {
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            color: #333333; /* Escrita preta */
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .autozapp-link {
+            display: inline-block;
+            color: #ffffff; /* Texto branco */
+            text-decoration: none;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            font-weight: 600;
+            padding: 0.6rem 1.5rem;
+            border: 2px solid #9370db; /* Lilás médio */
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, rgba(147, 112, 219, 0.2), rgba(186, 85, 211, 0.2)); /* Lilás suave */
+            touch-action: manipulation;
+        }
+
+        .autozapp-link:hover {
+            background: linear-gradient(45deg, #9370db, #ba55d3); /* Lilás médio */
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(147, 112, 219, 0.4);
+        }
+
+        .footer-banner {
+            max-width: min(1500px, 95vw);
+            width: 100%;
+            height: auto;
+            min-height: 150px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(224, 176, 255, 0.3); /* Borda lilás */
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(147, 112, 219, 0.3); /* Lilás suave */
+            border-radius: 50%;
+            border-top-color: #9370db; /* Lilás médio */
+            animation: spin 1s ease-in-out infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                gap: 0.8rem;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .nav-link {
+                font-size: 0.8rem;
+                padding: 0.6rem 1.2rem;
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+
+            .header {
+                padding: 160px 1rem 40px;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .sorteio-card {
+                padding: 1.5rem;
+            }
+
+            .footer-banner {
+                height: auto;
+                min-height: 120px;
+            }
+
+            .autozapp-text {
+                margin: 0 1rem 2rem 1rem;
+                padding: 1.2rem;
+            }
+
+            .autozapp-text p {
+                font-size: 0.9rem;
+            }
+
+            .autozapp-link {
+                font-size: 0.8rem;
+                padding: 0.5rem 1.2rem;
+                display: block;
+                width: fit-content;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.8rem 0;
+            }
+
+            .nav-container {
+                padding: 0 0.5rem;
+                gap: 0.8rem;
+            }
+
+            .nav-link {
+                font-size: 0.7rem;
+                padding: 0.5rem 1rem;
+                min-width: 100px;
+            }
+
+            .header {
+                padding: 140px 0.5rem 30px;
+            }
+
+            .container {
+                padding: 0 0.5rem;
+            }
+
+            .sorteio-card {
+                padding: 1.2rem;
+            }
+
+            .download-btn {
+                font-size: 0.8rem;
+                padding: 0.6rem 1.2rem;
+            }
+
+            .autozapp-text {
+                margin: 0 0.5rem 2rem 0.5rem;
+                padding: 1rem;
+            }
+
+            .autozapp-text p {
+                font-size: 0.8rem;
+            }
+
+            .autozapp-link {
+                font-size: 0.7rem;
+                padding: 0.4rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu de Navegação -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Mídia</a></li>
+                <li><a href="ganhadores.html" class="nav-link">Ganhadores do Desafio</a></li>
+                <li><a href="sorteio.html" class="nav-link active">Sorteio</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Principal -->
+    <header class="header">
+        <div class="container">
+            <h1 class="main-title">🎲 Sorteio do Desafio</h1>
+            <p class="subtitle">Acompanhe o sorteio do Desafio SM-Competition - Alvorada Pet!</p>
+        </div>
+    </header>
+
+    <!-- Container Principal -->
+    <div class="container">
+        <!-- Seção do Sorteio -->
+        <section class="sorteio-section">
+            <div class="sorteio-grid" id="sorteioGrid">
+                <div class="loading"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <div class="autozapp-text">
+                <p>Sistema exclusivo desenvolvido por Luiz do AutoZapp. Soluções inteligentes para empresas que querem agilidade.</p>
+                <a href="https://LUIZDOAUTOZAPP.COM.BR" target="_blank" class="autozapp-link">LUIZDOAUTOZAPP.COM.BR</a>
+            </div>
+            <img src="sitevideosdesafio/logos/logoautobanner.jpg" alt="Auto Banner" class="footer-banner">
+        </div>
+    </footer>
+
+    <script>
+        // Função robusta para baixar vídeo
+        function downloadVideo(videoSrc, filename) {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '⏳ Baixando...';
+            button.disabled = true;
+            
+            function showSuccess() {
+                button.innerHTML = '✅ Baixado!';
+                button.disabled = false;
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            }
+            
+            function showError() {
+                button.innerHTML = '❌ Erro';
+                button.disabled = false;
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            }
+            
+            async function executeDownload() {
+                try {
+                    const response = await fetch(videoSrc);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    const blob = await response.blob();
+                    
+                    const blobUrl = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = blobUrl;
+                    link.download = filename || 'video.mp4';
+                    link.style.display = 'none';
+                    
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    setTimeout(() => {
+                        URL.revokeObjectURL(blobUrl);
+                    }, 1000);
+                    
+                    showSuccess();
+                } catch (error) {
+                    console.error('Erro no download:', error);
+                    showError();
+                }
+            }
+            
+            executeDownload();
+        }
+
+        // Função para carregar o vídeo do sorteio
+        async function loadSorteio() {
+            const sorteioGrid = document.getElementById('sorteioGrid');
+            
+            try {
+                const sorteioCard = document.createElement('div');
+                sorteioCard.className = 'sorteio-card';
+                sorteioCard.innerHTML = `
+                    <video class="video-player" controls preload="metadata">
+                        <source src="sitevideosdesafio/sorteio/sorteio.mp4" type="video/mp4">
+                        Seu navegador não suporta o elemento de vídeo.
+                    </video>
+                    <h3 class="sorteio-title">Vídeo do Sorteio</h3>
+                    <div class="download-controls">
+                        <button class="download-btn" onclick="downloadVideo('sitevideosdesafio/sorteio/sorteio.mp4', 'sorteio.mp4')">
+                            Baixar Vídeo
+                        </button>
+                    </div>
+                `;
+                
+                sorteioGrid.innerHTML = '';
+                sorteioGrid.appendChild(sorteioCard);
+
+                // Adicionar animação de entrada
+                sorteioCard.style.opacity = '0';
+                sorteioCard.style.transform = 'translateY(50px) scale(0.9)';
+                setTimeout(() => {
+                    sorteioCard.style.transition = 'all 0.8s ease';
+                    sorteioCard.style.opacity = '1';
+                    sorteioCard.style.transform = 'translateY(0) scale(1)';
+                }, 200);
+
+            } catch (error) {
+                console.error('Erro ao carregar sorteio:', error);
+                sorteioGrid.innerHTML = '<p>Erro ao carregar o vídeo do sorteio. Verifique se o arquivo está na pasta correta.</p>';
+            }
+        }
+
+        // Carregar sorteio quando a página carregar
+        document.addEventListener('DOMContentLoaded', loadSorteio);
+
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Adicionar efeito parallax suave no scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const header = document.querySelector('.header');
+            if (header) {
+                header.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
